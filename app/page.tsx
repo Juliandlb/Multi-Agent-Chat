@@ -1,103 +1,112 @@
-import Image from "next/image";
+'use client';
+
+import React, { useState, useRef, useEffect } from 'react';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  // State to store the list of chat messages
+  const [messages, setMessages] = useState([
+    { sender: 'agent', text: 'Hello! How can I help you today?' }
+  ]);
+  // State to store the current input value
+  const [input, setInput] = useState('');
+  // State to indicate if the agent is "typing"
+  const [loading, setLoading] = useState(false);
+  // Reference to the end of the messages list (for scrolling)
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  // Function to handle sending a message
+  const handleSend = () => {
+    // Prevent sending empty messages or sending while loading
+    if (!input.trim() || loading) return;
+    // Add the user's message to the chat
+    setMessages(prev => [...prev, { sender: 'user', text: input }]);
+    setInput(''); // Clear the input box
+    setLoading(true); // Show "Agent is typing..."
+    // Simulate agent reply after 1 second
+    setTimeout(() => {
+      setMessages(prev => [
+        ...prev,
+        { sender: 'agent', text: 'This is a dummy agent reply.' }
+      ]);
+      setLoading(false); // Hide "Agent is typing..."
+    }, 1000);
+  };
+
+  // Scroll to the bottom of the chat when messages or loading change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, loading]);
+
+  return (
+    // Main container: centers the chat on the page
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-white font-sans">
+      {/* Chat box container */}
+      <div className="w-full max-w-md flex flex-col h-[80vh] bg-white rounded-3xl shadow-2xl border border-blue-100 font-sans">
+        {/* Header */}
+        <header className="p-6 border-b border-blue-100 flex items-center gap-2 bg-gradient-to-r from-blue-500/10 to-blue-100/10 rounded-t-3xl">
+          <span className="font-bold text-2xl text-blue-700 tracking-tight font-sans">Multi-Agent Chat</span>
+        </header>
+        {/* Main chat area */}
+        <main className="flex-1 overflow-y-auto px-6 py-4 space-y-4 bg-white font-sans">
+          {/* Render each message */}
+          {messages.map((msg, idx) => (
+            <div
+              key={idx}
+              className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
+              <div
+                className={`px-5 py-3 rounded-2xl max-w-[75%] text-base shadow-sm transition break-words
+                  ${msg.sender === 'user'
+                    ? 'bg-blue-500 text-white rounded-br-md'
+                    : 'bg-blue-50 text-blue-900 rounded-bl-md border border-blue-100'
+                  }`}
+              >
+                {msg.text}
+              </div>
+            </div>
+          ))}
+          {/* Show "Agent is typing..." when loading */}
+          {loading && (
+            <div className="flex justify-start">
+              <div className="px-5 py-3 rounded-2xl bg-blue-100 text-blue-700 text-base animate-pulse shadow-sm border border-blue-200">
+                Agent is typing...
+              </div>
+            </div>
+          )}
+          {/* Dummy div to scroll to the bottom */}
+          <div ref={messagesEndRef} />
+        </main>
+        {/* Footer with input form */}
+        <footer className="p-6 border-t border-blue-100 bg-gradient-to-r from-blue-50/60 to-white rounded-b-3xl font-sans">
+          <form
+            className="flex gap-3"
+            onSubmit={e => {
+              e.preventDefault(); // Prevent page reload
+              handleSend(); // Send the message
+            }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+            {/* Input box for typing messages */}
+            <textarea
+              className="flex-1 rounded-full border border-blue-200 px-5 py-3 text-base bg-white text-blue-900 outline-none focus:ring-2 focus:ring-blue-400 shadow-sm transition placeholder:text-blue-300 font-sans resize-none overflow-auto"
+              placeholder="Type your message..."
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              disabled={loading}
+              autoFocus
+              rows={1}
+              style={{ minHeight: '48px', maxHeight: '120px' }} // Optional: control min/max height
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+            {/* Send button */}
+            <button
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full font-bold text-base shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed font-sans"
+              type="submit"
+              disabled={loading || !input.trim()}
+            >
+              Send
+            </button>
+          </form>
+        </footer>
+      </div>
     </div>
   );
 }
