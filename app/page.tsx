@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import { trpc } from '@/utils/trpc';  // Import the tRPC client for API calls
 
 export default function Home() {
   // State to store the list of chat messages
@@ -14,23 +15,28 @@ export default function Home() {
   // Reference to the end of the messages list (for scrolling)
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Hook up the mutation for sending messages
+  const sendMessage = trpc.user.sendMessage.useMutation();
+
   // Function to handle sending a message
-  const handleSend = () => {
-    // Prevent sending empty messages or sending while loading
-    if (!input.trim() || loading) return;
-    // Add the user's message to the chat
-    setMessages(prev => [...prev, { sender: 'user', text: input }]);
-    setInput(''); // Clear the input box
-    setLoading(true); // Show "Agent is typing..."
-    // Simulate agent reply after 1 second
-    setTimeout(() => {
-      setMessages(prev => [
-        ...prev,
-        { sender: 'agent', text: 'This is a dummy agent reply.' }
-      ]);
-      setLoading(false); // Hide "Agent is typing..."
-    }, 1000);
+  const handleSend = async () => {
+  if (!input.trim() || loading) return;
+
+  const userMessage = input;
+  setMessages(prev => [...prev, { sender: 'user', text: userMessage }]);
+  setInput('');
+  setLoading(true);
+
+  try {
+    const result = await sendMessage.mutateAsync({ message: userMessage });
+    setMessages(prev => [...prev, { sender: 'agent', text: result.reply }]);
+  } catch (err) {
+    setMessages(prev => [...prev, { sender: 'agent', text: 'Oops! Something went wrong.' }]);
+  } finally {
+    setLoading(false);
+  }
   };
+
 
   // Scroll to the bottom of the chat when messages or loading change
   useEffect(() => {
