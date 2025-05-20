@@ -1,17 +1,20 @@
+// Import dotenv to load environment variables from .env file
 import { config } from 'dotenv';
 config(); // loads .env into process.env
 
-import { Agent, Runner } from 'openai-agents-js';
+// Import the Agent class from openai-agents-js
+import { Agent } from 'openai-agents-js';
 
-async function main() {
-  const agent = new Agent({
-    name: 'Assistant',
-    instructions: 'You only respond in haikus.',
-    model: 'gpt-4', // optional: default is gpt-3.5-turbo
-  });
+// Create and export an instance of Agent for input guardrail classification
+export const inputGuardrailAgent = new Agent({
+  name: 'InputGuardrail', // Name of the agent
+  instructions: `
+You are a classifier. Your job is to decide if a user's message is related to finance.
 
-  const result = await Runner.run(agent, 'Tell me about recursion in programming.');
-  console.log(result.finalOutput);
-}
-
-main();
+Respond ONLY with:
+- "ROUTE" if it's finance-related
+- "REJECT" if it's not
+Do not include any other words or punctuation.
+  `, // Instructions for the agent to follow
+  model: 'gpt-3.5-turbo', // OpenAI model to use
+});
