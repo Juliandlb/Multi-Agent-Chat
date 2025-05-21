@@ -111,7 +111,7 @@ Visit [http://localhost:3000](http://localhost:3000) to open the app.
 
 ### Example 2:
 
-**Prompt:** Show me my user profile
+**Prompt:** show me my account info
 **Response:** The user with the email "alice@example.com" is named Alice and her profile is Data Scientist. (Processing path: InputGuardrail → Orchestrator → DBAgent)
 
 ### Example 3:
