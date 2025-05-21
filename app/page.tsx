@@ -16,7 +16,7 @@ export default function Home() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       sender: 'agent',
-      text: 'Hello! Welcome to Moneda. How can I assist with your banking needs today?',
+      text: 'Hello! Welcome to Moneda AI. How can I assist with your banking needs today?',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     }
   ]);
@@ -30,6 +30,17 @@ export default function Home() {
 
   // Hook up the mutation for sending messages
   const sendMessage = trpc.user.sendMessage.useMutation();
+
+  // Predefined user emails
+  const userEmails = [
+    'alice@example.com',
+    'bob@example.com',
+    'charlie@example.com',
+  ];
+  // State for current user email
+  const [currentUserEmail, setCurrentUserEmail] = useState(userEmails[0]);
+  // State for dropdown open/close
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   // Function to handle sending a message
   const handleSend = async () => {
@@ -47,7 +58,7 @@ export default function Home() {
     setLoading(true);
 
     try {
-      const result = await sendMessage.mutateAsync({ message: userMessage });
+      const result = await sendMessage.mutateAsync({ message: userMessage, email: currentUserEmail });
       setMessages(prev => [
         ...prev,
         {
@@ -78,7 +89,42 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#f6f9fb] font-sans">
-      <div className="w-full max-w-lg flex flex-col h-[80vh] bg-white rounded-2xl shadow-xl border border-blue-100 font-sans">
+      <div className="w-full max-w-lg flex flex-col h-[80vh] bg-white rounded-2xl shadow-xl border border-blue-100 font-sans relative">
+        {/* User selector dropdown */}
+        <div className="absolute top-4 right-4 z-20">
+          <div className="relative">
+            <button
+              className="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center hover:bg-blue-200 transition"
+              onClick={() => setDropdownOpen(v => !v)}
+              aria-label="Select user"
+              type="button"
+            >
+              {/* User icon (SVG) */}
+              <svg className="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 20c0-4 4-7 8-7s8 3 8 7" />
+              </svg>
+            </button>
+            {dropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white border border-blue-100 rounded-lg shadow-lg z-30">
+                {userEmails.map(email => (
+                  <button
+                    key={email}
+                    className={`block w-full text-left px-4 py-2 text-sm hover:bg-blue-50 ${
+                      email === currentUserEmail ? 'bg-blue-100 font-semibold text-blue-700' : ''
+                    }`}
+                    onClick={() => {
+                      setCurrentUserEmail(email);
+                      setDropdownOpen(false);
+                    }}
+                  >
+                    {email}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
         {/* Header */}
         <header className="p-5 border-b border-blue-100 flex items-center gap-3 bg-white rounded-t-2xl">
           <div className="flex items-center gap-3">
@@ -86,7 +132,7 @@ export default function Home() {
               M
             </div>
             <div>
-              <div className="font-bold text-lg text-blue-900 leading-tight">Moneda Assistant</div>
+              <div className="font-bold text-lg text-blue-900 leading-tight">Moneda Multi-Agent Assistant</div>
               <div className="text-xs text-blue-500">Your intelligent banking companion</div>
             </div>
           </div>

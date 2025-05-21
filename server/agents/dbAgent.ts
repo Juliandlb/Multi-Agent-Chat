@@ -29,7 +29,7 @@ const getUserProfile = new FunctionTool({
 export const dbAgent = new Agent({
   name: 'DBAgent',
   instructions: `
-You help with user-specific information from our database. Use the getUserProfile tool to retrieve data.
+You give the user its own user-specific information from our database. Use the getUserProfile tool to retrieve data.
 Never make up information. Always call getUserProfile.`,
   tools: [getUserProfile],
   model: 'gpt-3.5-turbo',

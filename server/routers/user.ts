@@ -8,8 +8,6 @@ import { dbAgent } from '../agents/dbAgent';
 import { financeAgent } from '../agents/financeAgent';
 import { generalAgent } from '../agents/generalAgent';
 
-const CURRENT_USER_EMAIL = 'alice@example.com';
-
 export const userRouter = router({
   getUserByEmail: publicProcedure
     .input(z.string().email())
@@ -20,7 +18,7 @@ export const userRouter = router({
     }),
 
   sendMessage: publicProcedure
-    .input(z.object({ message: z.string() }))
+    .input(z.object({ message: z.string(), email: z.string().email() }))
     .mutation(async ({ input }) => {
       const trace: string[] = [];
       try {
@@ -41,7 +39,7 @@ export const userRouter = router({
 
         if (route === 'DB') {
           trace.push('DBAgent');
-          const dbResponse = await Runner.run(dbAgent as any, JSON.stringify({ email: CURRENT_USER_EMAIL }));
+          const dbResponse = await Runner.run(dbAgent as any, JSON.stringify({ email: input.email }));
           reply = dbResponse.finalOutput;
         } else if (route === 'FINANCE') {
           trace.push('FinanceAgent');
