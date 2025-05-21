@@ -1,5 +1,6 @@
 import React from 'react';
 
+// MessageBubble displays a single chat message with styling based on sender
 export default function MessageBubble({
   sender,
   text
@@ -17,6 +18,7 @@ export default function MessageBubble({
             : 'bg-gray-200 text-gray-800'
         }`}
       >
+        {/* Render each line separately to preserve line breaks */}
         {text.split('\n').map((line, idx, arr) => (
           <React.Fragment key={idx}>
             {line}

@@ -6,8 +6,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink } from '@trpc/client';
 import { trpc } from '@/utils/trpc';
 
+// Create a single QueryClient instance for React Query
 const queryClient = new QueryClient();
 
+// Create a tRPC client with HTTP batch link
 const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
@@ -16,6 +18,7 @@ const trpcClient = trpc.createClient({
   ],
 });
 
+// Providers component wraps children with tRPC and React Query providers
 export default function Providers({ children }: { children: ReactNode }) {
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>

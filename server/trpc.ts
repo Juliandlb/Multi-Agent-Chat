@@ -1,3 +1,5 @@
+// tRPC initialization and exports for router and procedures.
+
 // Import the initTRPC function from the tRPC server package
 import { initTRPC } from '@trpc/server';
 

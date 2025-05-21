@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+// InputBox component for sending messages
 export default function InputBox({
   onSend,
   disabled
@@ -9,6 +10,7 @@ export default function InputBox({
 }) {
   const [input, setInput] = useState('');
 
+  // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim()) {

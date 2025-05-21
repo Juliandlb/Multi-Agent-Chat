@@ -1,3 +1,5 @@
+// Root tRPC router combining all API sub-routers.
+
 // Import the main router creator from tRPC setup
 import { router } from './trpc';
 // Import the userRouter which contains user-related API procedures

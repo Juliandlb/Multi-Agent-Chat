@@ -5,6 +5,7 @@ import { trpc } from '@/utils/trpc';
 import ReactMarkdown from 'react-markdown';
 
 export default function Home() {
+  // Define the shape of a chat message
   type ChatMessage = {
     sender: 'user' | 'agent' | 'system';
     text: string;
@@ -58,6 +59,7 @@ export default function Home() {
     setLoading(true);
 
     try {
+      // Send message to backend and get agent reply
       const result = await sendMessage.mutateAsync({ message: userMessage, email: currentUserEmail });
       setMessages(prev => [
         ...prev,
@@ -139,6 +141,7 @@ export default function Home() {
         </header>
         {/* Main chat area */}
         <main className="flex-1 overflow-y-auto px-5 py-4 space-y-4 bg-white font-sans">
+          {/* Render each chat message */}
           {messages.map((msg, idx) => {
             const isUser = msg.sender === 'user';
             return (
@@ -166,6 +169,7 @@ export default function Home() {
                         }`}
                     >
                       <div>
+                        {/* Render message text as Markdown */}
                         <ReactMarkdown
                           components={{
                             // Optionally, you can style strong/bold text for user/agent
@@ -193,6 +197,7 @@ export default function Home() {
               </div>
             );
           })}
+          {/* Loading indicator for agent typing */}
           {loading && (
             <div className="flex justify-start">
               <div className="flex items-end gap-2">
@@ -205,6 +210,7 @@ export default function Home() {
               </div>
             </div>
           )}
+          {/* Dummy div for scroll-to-bottom */}
           <div ref={messagesEndRef} />
         </main>
         {/* Footer with input form */}
