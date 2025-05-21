@@ -31,7 +31,7 @@ This project implements a multi-agent chat interface using the OpenAI Agents SDK
 ## Multi-Agent Architecture Diagram
 
 <p align="center">
-  <img src="./public/agentArchitecture.svg" alt="Agent Architecture Diagram" style="max-width: 600px; width: 100%;" />
+  <img src="./public/agentArchitecture.svg" alt="Agent Architecture Diagram" style="max-width: 600px; width: 60%;" />
 </p>
 
 ## Technical Decisions & Reasoning
