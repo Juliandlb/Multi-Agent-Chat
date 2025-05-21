@@ -107,14 +107,19 @@ Visit [http://localhost:3000](http://localhost:3000) to open the app.
 ### Example 1:
 
 **Prompt:** What is compound interest?
-**Response:** Compound interest is the process where interest is added to the principal so that the added interest also earns interest...
+**Response:** Compound interest is the interest calculated on the initial principal as well as on the accumulated interest of previous periods. In other words,... (Processing path: InputGuardrail → Orchestrator → FinanceAgent)
 
 ### Example 2:
 
 **Prompt:** Show me my user profile
-**Response:** Here's your profile: Name: John Doe, Email: [john@example.com](mailto:john@example.com)
+**Response:** The user with the email "alice@example.com" is named Alice and her profile is Data Scientist. (Processing path: InputGuardrail → Orchestrator → DBAgent)
 
 ### Example 3:
 
 **Prompt:** What are the latest stock prices?
-**Response:** I'm sorry, I cannot access real-time data. I can help explain how stocks work though.
+**Response:** I'm unable to provide real-time stock prices as they constantly fluctuate during trading hours. It's best to check a reliable financial news website or use a stock market app for the latest stock prices. (Processing path: InputGuardrail → Orchestrator → FinanceAgent)
+
+### Example 4:
+
+**Prompt:** Hi, how are you?
+**Response:** Hello! I'm just a computer program, so I don't have feelings, but I'm here and ready to help you. How can I assist you today? (Processing path: InputGuardrail → GeneralAgent)
