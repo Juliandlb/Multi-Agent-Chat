@@ -4,10 +4,18 @@ import React, { useState, useRef, useEffect } from 'react';
 import { trpc } from '@/utils/trpc';  // Import the tRPC client for API calls
 
 export default function Home() {
+
+  type ChatMessage = {
+  sender: 'user' | 'agent' | 'system';
+  text: string;
+  trace?: string[];
+  };
+
   // State to store the list of chat messages
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<ChatMessage[]>([
     { sender: 'agent', text: 'Hello! How can I help you today?' }
   ]);
+
   // State to store the current input value
   const [input, setInput] = useState('');
   // State to indicate if the agent is "typing"
@@ -32,9 +40,9 @@ export default function Home() {
 
     setMessages(prev => [
       ...prev,
-      { sender: 'agent', text: result.reply },
-      ...(result.trace ? [{ sender: 'system', text: `🧭 Path: ${result.trace.join(' → ')}` }] : [])
+      { sender: 'agent', text: result.reply, trace: result.trace } as ChatMessage,
     ]);
+
     } catch (err) {
       setMessages(prev => [...prev, { sender: 'agent', text: 'Oops! Something went wrong.' }]);
     } finally {
@@ -73,9 +81,15 @@ export default function Home() {
                     : 'bg-blue-50 text-blue-900 rounded-bl-md border border-blue-100'
                   }`}
               >
-                {msg.text}
+                <div>{msg.text}</div>
+                {msg.trace && (
+                  <div className="mt-1 text-sm italic text-gray-400">
+                    Path: {msg.trace.join(' → ')}
+                  </div>
+                )}
               </div>
             </div>
+
           ))}
           {/* Show "Agent is typing..." when loading */}
           {loading && (
