@@ -29,13 +29,19 @@ export default function Home() {
 
   try {
     const result = await sendMessage.mutateAsync({ message: userMessage });
-    setMessages(prev => [...prev, { sender: 'agent', text: result.reply }]);
-  } catch (err) {
-    setMessages(prev => [...prev, { sender: 'agent', text: 'Oops! Something went wrong.' }]);
-  } finally {
-    setLoading(false);
-  }
+
+    setMessages(prev => [
+      ...prev,
+      { sender: 'agent', text: result.reply },
+      ...(result.trace ? [{ sender: 'system', text: `🧭 Path: ${result.trace.join(' → ')}` }] : [])
+    ]);
+    } catch (err) {
+      setMessages(prev => [...prev, { sender: 'agent', text: 'Oops! Something went wrong.' }]);
+    } finally {
+      setLoading(false);
+    }
   };
+;
 
 
   // Scroll to the bottom of the chat when messages or loading change
