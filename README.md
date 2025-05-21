@@ -18,6 +18,7 @@ This project implements a multi-agent chat interface using the OpenAI Agents SDK
 
 ## Features
 
+- Three predefined users selectable from a dropdown menu in the chat UI (e.g., alice@example.com)
 - Chat interface built with Next.js and React (v0 UI)
 - Multi-agent architecture using OpenAI Agents SDK
 - Input Guardrail Agent to filter finance-related prompts
