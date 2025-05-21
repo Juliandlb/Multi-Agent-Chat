@@ -6,6 +6,8 @@ import { inputGuardrailAgent } from '../agents/inputGuardrail';
 import { orchestratorAgent } from '../agents/orchestrator';
 import { dbAgent } from '../agents/dbAgent';
 import { financeAgent } from '../agents/financeAgent';
+import { generalAgent } from '../agents/generalAgent';
+
 
 const CURRENT_USER_EMAIL = 'alice@example.com';
 
@@ -25,7 +27,9 @@ export const userRouter = router({
         const guardrailResult = await Runner.run(inputGuardrailAgent, input.message);
 
         if (guardrailResult.finalOutput === 'REJECT') {
-          return { reply: 'Sorry, this message is not finance-related ❌' };
+          const generalResponse = await Runner.run(generalAgent as any, input.message);
+          return { reply: generalResponse.finalOutput };
+
         }
 
         const orchestration = await Runner.run(orchestratorAgent, input.message);
