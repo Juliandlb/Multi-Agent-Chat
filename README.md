@@ -81,7 +81,7 @@ npm install
 1. Create a `.env` file with the following environment variables:
 
 ```
-DATABASE_URL=file:.../prisma/dev.db
+DATABASE_URL=file:./prisma/dev.db
 OPENAI_API_KEY=sk-...
 ```
 
