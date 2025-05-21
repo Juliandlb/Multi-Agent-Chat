@@ -6,8 +6,9 @@ import { router, publicProcedure } from '../trpc';
 import { prisma } from '../prisma';
 // Import the OpenAI agent runner
 import { Runner } from 'openai-agents-js';
-// Import the custom input guardrail agent
+// Import the custom agents
 import { inputGuardrailAgent } from '../agents/inputGuardrail';
+import { orchestratorAgent } from '../agents/orchestrator';
 
 // Define the userRouter with available user-related API procedures
 export const userRouter = router({
@@ -21,20 +22,26 @@ export const userRouter = router({
       });
     }),
 
-  // Procedure to handle sending a message and running it through a guardrail agent
   sendMessage: publicProcedure
-    .input(z.object({ message: z.string() })) // Validate input as an object with a string message
-    .mutation(async ({ input }) => {
-      // Run the input message through the guardrail agent
-      const guardrailResult = await Runner.run(inputGuardrailAgent, input.message);
-      
-      // Determine the reply based on the guardrail agent's output
-      const reply =
-        guardrailResult.finalOutput === 'ROUTE'
-          ? 'Message is finance-related ✅'
-          : 'Sorry, this message is not finance-related ❌';
+  .input(z.object({ message: z.string() }))
+  .mutation(async ({ input }) => {
+    const guardrailResult = await Runner.run(inputGuardrailAgent, input.message);
 
-      // Return the reply to the client
-      return { reply };
-    }),
+    if (guardrailResult.finalOutput === 'REJECT') {
+      return { reply: 'Sorry, this message is not finance-related ❌' };
+    }
+
+    // Route via Orchestrator
+    const orchestration = await Runner.run(orchestratorAgent, input.message);
+    const route = orchestration.finalOutput;
+
+    const reply =
+      route === 'DB'
+        ? '⛳ Routed to DB Agent (to be implemented)'
+        : route === 'FINANCE'
+        ? '📚 Routed to Finance Agent (to be implemented)'
+        : '⚠️ Unknown routing decision.';
+
+    return { reply };
+  }),
 });
