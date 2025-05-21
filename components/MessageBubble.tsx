@@ -17,7 +17,12 @@ export default function MessageBubble({
             : 'bg-gray-200 text-gray-800'
         }`}
       >
-        {text}
+        {text.split('\n').map((line, idx, arr) => (
+          <React.Fragment key={idx}>
+            {line}
+            {idx < arr.length - 1 && <br />}
+          </React.Fragment>
+        ))}
       </div>
     </div>
   );
