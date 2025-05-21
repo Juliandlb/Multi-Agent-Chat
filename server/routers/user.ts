@@ -6,6 +6,8 @@ import { inputGuardrailAgent } from '../agents/inputGuardrail';
 import { orchestratorAgent } from '../agents/orchestrator';
 import { dbAgent } from '../agents/dbAgent';
 
+const CURRENT_USER_EMAIL = 'alice@example.com';
+
 export const userRouter = router({
   getUserByEmail: publicProcedure
     .input(z.string().email())
@@ -31,7 +33,7 @@ export const userRouter = router({
         let reply: string;
 
         if (route === 'DB') {
-          const dbResponse = await Runner.run(dbAgent as any, JSON.stringify({ email: 'bob@example.com' }));
+          const dbResponse = await Runner.run(dbAgent as any, JSON.stringify({ email: CURRENT_USER_EMAIL }));
           reply = dbResponse.finalOutput;
         } else if (route === 'FINANCE') {
           reply = '📚 Routed to Finance Agent (to be implemented)';
