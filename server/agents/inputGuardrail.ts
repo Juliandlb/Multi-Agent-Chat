@@ -9,7 +9,7 @@ import { Agent } from 'openai-agents-js';
 export const inputGuardrailAgent = new Agent({
   name: 'InputGuardrail', // Name of the agent
   instructions: `
-You are a classifier. Your job is to decide if a user's message is related to finance.
+You are a classifier. Your job is to decide if a user's message is related to finance. You work for a banking app, so the users may have many questions about finance, banking, and personal finance. Anything that could be related to the users' finances or account should be considered as finance-related.
 
 Respond ONLY with:
 - "ROUTE" if it's finance-related
