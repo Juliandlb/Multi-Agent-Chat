@@ -130,9 +130,12 @@ export default function Home() {
         {/* Header */}
         <header className="p-5 border-b border-blue-100 flex items-center gap-3 bg-white rounded-t-2xl">
           <div className="flex items-center gap-3">
-            <div className="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold text-xl">
-              M
-            </div>
+            {/* Replace text avatar with Moneda logo */}
+            <img
+              src="/MonedaLogo.jpeg"
+              alt="Moneda Logo"
+              className="rounded-full w-10 h-10 object-cover border border-blue-200"
+            />
             <div>
               <div className="font-bold text-lg text-blue-900 leading-tight">Moneda Multi-Agent Assistant</div>
               <div className="text-xs text-blue-500">Your intelligent banking companion</div>
@@ -154,9 +157,12 @@ export default function Home() {
                         U
                       </div>
                     ) : (
-                      <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">
-                        M
-                      </div>
+                      // Use Moneda logo for agent avatar
+                      <img
+                        src="/MonedaLogo.jpeg"
+                        alt="Moneda Logo"
+                        className="rounded-full w-8 h-8 object-cover border border-blue-200"
+                      />
                     )}
                   </div>
                   {/* Bubble */}
@@ -201,9 +207,12 @@ export default function Home() {
           {loading && (
             <div className="flex justify-start">
               <div className="flex items-end gap-2">
-                <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">
-                  M
-                </div>
+                {/* Use Moneda logo instead of "M" */}
+                <img
+                  src="/MonedaLogo.jpeg"
+                  alt="Moneda Logo"
+                  className="rounded-full w-8 h-8 object-cover border border-blue-200"
+                />
                 <div className="px-4 py-3 rounded-xl bg-gray-100 text-gray-900 text-base animate-pulse shadow-sm border border-blue-100">
                   Agent is typing...
                 </div>
