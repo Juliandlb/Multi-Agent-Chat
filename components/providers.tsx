@@ -1,4 +1,5 @@
-// components/providers.tsx
+// Providers: Wraps the app with tRPC and React Query providers for data fetching and caching.
+
 'use client';
 
 import { ReactNode } from 'react';
@@ -19,7 +20,7 @@ const trpcClient = trpc.createClient({
 });
 
 // Providers component wraps children with tRPC and React Query providers
-export default function Providers({ children }: { children: ReactNode }) {
+export default function Providers({ children }: { /** React children to wrap with providers */ children: ReactNode }) {
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>

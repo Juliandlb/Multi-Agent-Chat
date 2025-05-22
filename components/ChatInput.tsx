@@ -1,9 +1,15 @@
+// ChatInput: Input area for typing and sending chat messages, with support for multiline and keyboard shortcuts.
+
 import React from 'react';
 
 type Props = {
+  /** The current input value */
   input: string;
+  /** Callback to update the input value */
   setInput: (v: string) => void;
+  /** Whether a message is being sent (disables input) */
   loading: boolean;
+  /** Handler to send the message */
   handleSend: () => void;
 };
 
@@ -13,7 +19,7 @@ const ChatInput: React.FC<Props> = ({ input, setInput, loading, handleSend }) =>
       className="flex flex-col gap-2"
       onSubmit={e => {
         e.preventDefault();
-        handleSend();
+        handleSend(); // Prevent default form submit and call handler
       }}
     >
       <div className="flex gap-2 items-end">
@@ -31,6 +37,7 @@ const ChatInput: React.FC<Props> = ({ input, setInput, loading, handleSend }) =>
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
           }}
+          // Send on Enter, new line on Shift+Enter
           onKeyDown={e => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
@@ -49,6 +56,7 @@ const ChatInput: React.FC<Props> = ({ input, setInput, loading, handleSend }) =>
           </svg>
         </button>
       </div>
+      {/* Helper text for keyboard shortcuts */}
       <div className="text-xs text-blue-300 mt-1 ml-2 select-none">
         Press Enter to send, Shift+Enter for a new line
       </div>

@@ -1,3 +1,5 @@
+// ChatHeader: Displays the chat assistant's branding and title at the top of the chat window.
+
 const ChatHeader = () => (
   <header className="p-5 border-b border-blue-100 flex items-center gap-3 bg-white rounded-t-2xl">
     <div className="flex items-center gap-3">
