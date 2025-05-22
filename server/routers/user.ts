@@ -63,4 +63,10 @@ export const userRouter = router({
         return { reply: 'Oops! Something went wrong.', trace };
       }
     }),
+
+  // Procedure to get all user emails
+  getAllEmails: publicProcedure.query(async () => {
+    const users = await prisma.user.findMany({ select: { email: true } });
+    return users.map(u => u.email);
+  }),
 });

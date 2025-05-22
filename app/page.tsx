@@ -32,20 +32,24 @@ export default function Home() {
   // Hook up the mutation for sending messages
   const sendMessage = trpc.user.sendMessage.useMutation();
 
-  // Predefined user emails
-  const userEmails = [
-    'alice@example.com',
-    'bob@example.com',
-    'charlie@example.com',
-  ];
+  // Fetch user emails from the backend
+  const { data: userEmails, isLoading: emailsLoading } = trpc.user.getAllEmails.useQuery();
+
   // State for current user email
-  const [currentUserEmail, setCurrentUserEmail] = useState(userEmails[0]);
+  const [currentUserEmail, setCurrentUserEmail] = useState<string | undefined>(undefined);
   // State for dropdown open/close
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  // Set default user email when emails are loaded
+  useEffect(() => {
+    if (userEmails && userEmails.length > 0 && !currentUserEmail) {
+      setCurrentUserEmail(userEmails[0]);
+    }
+  }, [userEmails, currentUserEmail]);
+
   // Function to handle sending a message
   const handleSend = async () => {
-    if (!input.trim() || loading) return;
+    if (!input.trim() || loading || !currentUserEmail) return;
     const userMessage = input;
     setMessages(prev => [
       ...prev,
@@ -109,20 +113,24 @@ export default function Home() {
             </button>
             {dropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white border border-blue-100 rounded-lg shadow-lg z-30">
-                {userEmails.map(email => (
-                  <button
-                    key={email}
-                    className={`block w-full text-left px-4 py-2 text-sm hover:bg-blue-50 ${
-                      email === currentUserEmail ? 'bg-blue-100 font-semibold text-blue-700' : ''
-                    }`}
-                    onClick={() => {
-                      setCurrentUserEmail(email);
-                      setDropdownOpen(false);
-                    }}
-                  >
-                    {email}
-                  </button>
-                ))}
+                {emailsLoading ? (
+                  <div className="px-4 py-2 text-sm text-blue-400">Loading...</div>
+                ) : (
+                  userEmails?.map(email => (
+                    <button
+                      key={email}
+                      className={`block w-full text-left px-4 py-2 text-sm hover:bg-blue-50 ${
+                        email === currentUserEmail ? 'bg-blue-100 font-semibold text-blue-700' : ''
+                      }`}
+                      onClick={() => {
+                        setCurrentUserEmail(email);
+                        setDropdownOpen(false);
+                      }}
+                    >
+                      {email}
+                    </button>
+                  ))
+                )}
               </div>
             )}
           </div>
