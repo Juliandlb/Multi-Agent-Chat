@@ -26,7 +26,7 @@ This project implements a multi-agent chat interface using the OpenAI Agents SDK
 - DB Agent integrated with Prisma to retrieve user-specific data
 - General Finance Agent for static finance Q&A
 - Backend communication using tRPC
-- User model stored in a PostgreSQL database via Prisma
+- User model stored in a SQLite database via Prisma
 
 ## Multi-Agent Architecture Diagram
 
