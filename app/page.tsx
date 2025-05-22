@@ -119,8 +119,8 @@ export default function Home() {
                   userEmails?.map(email => (
                     <button
                       key={email}
-                      className={`block w-full text-left px-4 py-2 text-sm hover:bg-blue-50 ${
-                        email === currentUserEmail ? 'bg-blue-100 font-semibold text-blue-700' : ''
+                      className={`block w-full text-left px-4 py-2 text-sm hover:bg-blue-50 text-black ${
+                        email === currentUserEmail ? 'bg-blue-100 font-semibold' : ''
                       }`}
                       onClick={() => {
                         setCurrentUserEmail(email);
